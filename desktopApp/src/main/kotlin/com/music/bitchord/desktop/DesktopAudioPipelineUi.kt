@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,12 +36,21 @@ internal fun DesktopAudioPipelineDialog(
     onDismiss: () -> Unit,
 ) {
     DesktopDialogPanel(onDismiss = onDismiss, maxWidth = 460) {
-        Column(Modifier.padding(22.dp), verticalArrangement = Arrangement.spacedBy(18.dp)) {
-            Text(
-                DesktopStrings["audio_pipeline", "Audio pipeline"],
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-            )
+        val scrollState = rememberScrollState()
+        Text(
+            DesktopStrings["audio_pipeline", "Audio pipeline"],
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(start = 22.dp, end = 22.dp, top = 22.dp),
+        )
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .then(desktopPanelBody(cardMax = 520.dp))
+                .verticalScroll(scrollState)
+                .padding(start = 22.dp, end = 22.dp, top = 18.dp, bottom = 22.dp),
+            verticalArrangement = Arrangement.spacedBy(18.dp),
+        ) {
             // The engine's own copy, so Source and Decoder cannot disagree while an upgrade lands.
             val source = pipeline.sourceFormat ?: format
             PipelineStage(DesktopStrings["pipeline_source", "Source"]) {
